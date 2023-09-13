@@ -4,7 +4,7 @@ import { Loadable } from "~shared/ui/loadable";
 import { MainLayout } from "~pages//layouts";
 import { AuthGuard } from "~entities/session";
 import { GuestGuard } from "~entities/session";
-import { AuthContext } from "~app/context/AuthContext.tsx";
+import { AuthContext } from "~features/session";
 
 const HomePage = Loadable(lazy(() => import("~pages/home-page")));
 const ProfilePage = Loadable(lazy(() => import("~pages/profile-page")));

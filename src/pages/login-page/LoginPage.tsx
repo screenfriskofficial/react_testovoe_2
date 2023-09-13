@@ -2,10 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useAuthStore } from "~app/store.ts";
+import { userLoginStore } from "~features/session";
 
 const LoginPage = () => {
-  const { login } = useAuthStore();
+  const { login } = userLoginStore();
   const navigate = useNavigate();
 
   const handleNavigate = () => {

@@ -2,10 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, TextField } from "@mui/material";
-import { useAuthStore } from "~app/store.ts";
+import { userRegisterStore } from "~features/session";
 
 const RegisterPage = () => {
-  const { register } = useAuthStore();
+  const { register } = userRegisterStore();
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -14,12 +14,12 @@ const RegisterPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      username: "",
+      displayName: "",
       email: "",
       password: "",
     },
     validationSchema: Yup.object().shape({
-      username: Yup.string().min(3).required("required field"),
+      displayName: Yup.string().min(3).required("required field"),
       email: Yup.string()
         .email("invalid email format!")
         .required("required field"),
@@ -37,16 +37,16 @@ const RegisterPage = () => {
       <form onSubmit={formik.handleSubmit}>
         <h1>register</h1>
         <TextField
-          error={Boolean(formik.errors.username)}
-          helperText={formik.errors.username}
+          error={Boolean(formik.errors.displayName)}
+          helperText={formik.errors.displayName}
           variant={"standard"}
           label={"username"}
-          id={"username"}
-          name={"username"}
-          value={formik.values.username}
+          id={"displayName"}
+          name={"displayName"}
+          value={formik.values.displayName}
           onChange={formik.handleChange}
           placeholder={"enter your username"}
-          type="username"
+          type="text"
         />
         <TextField
           error={Boolean(formik.errors.email)}
