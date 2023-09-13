@@ -1,14 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "~app/firebase.ts";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Simulate } from "react-dom/test-utils";
-import error = Simulate.error;
+import { Button, TextField } from "@mui/material";
+import { useAuthStore } from "~app/store.ts";
 
 const RegisterPage = () => {
+  const { register } = useAuthStore();
   const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate("/");
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -19,26 +21,14 @@ const RegisterPage = () => {
     validationSchema: Yup.object().shape({
       username: Yup.string().min(3).required("required field"),
       email: Yup.string()
-        .email("Invalid email format!")
+        .email("invalid email format!")
         .required("required field"),
       password: Yup.string()
         .min(6, "your password must have at least 6 characters!")
         .required("required field"),
     }),
-    onSubmit: async (values) => {
-      const { username, email, password } = values;
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      try {
-        await setDoc(doc(db, "users", res.user.uid), {
-          uid: res.user.uid,
-          username,
-          email,
-          password,
-        });
-        navigate("/");
-      } catch (error) {
-        console.error(error);
-      }
+    onSubmit: (values) => {
+      register(values, handleNavigate);
     },
   });
 
@@ -46,36 +36,47 @@ const RegisterPage = () => {
     <div className={"auth"}>
       <form onSubmit={formik.handleSubmit}>
         <h1>register</h1>
-        <input
+        <TextField
+          error={Boolean(formik.errors.username)}
+          helperText={formik.errors.username}
+          variant={"standard"}
+          label={"username"}
           id={"username"}
           name={"username"}
           value={formik.values.username}
           onChange={formik.handleChange}
-          placeholder={"username"}
-          type="text"
+          placeholder={"enter your username"}
+          type="username"
         />
-        {<p className={"error"}>{formik.errors.username}</p>}
-        <input
+        <TextField
+          error={Boolean(formik.errors.email)}
+          helperText={formik.errors.email}
+          variant={"standard"}
+          label={"email"}
           id={"email"}
           name={"email"}
           value={formik.values.email}
           onChange={formik.handleChange}
-          placeholder={"email"}
+          placeholder={"enter your email"}
           type="email"
         />
-        {<p className={"error"}>{formik.errors.email}</p>}
-        <input
+        <TextField
+          error={Boolean(formik.errors.password)}
+          helperText={formik.errors.password}
+          variant={"standard"}
+          label={"password"}
           id={"password"}
           name={"password"}
           value={formik.values.password}
           onChange={formik.handleChange}
-          placeholder={"password"}
+          placeholder={"enter your password"}
           type="password"
         />
-        {<p className={"error"}>{formik.errors.password}</p>}
-        <button>Register</button>
+        <Button type={"submit"} variant={"contained"} fullWidth>
+          Register
+        </Button>
         <p>
-          You have an account? <Link to={"/login"}>login</Link>
+          Have an account? <Link to={"/login"}>login</Link>
         </p>
       </form>
     </div>

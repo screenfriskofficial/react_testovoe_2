@@ -1,13 +1,63 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, TextField } from "@mui/material";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useAuthStore } from "~app/store.ts";
 
 const LoginPage = () => {
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate("/");
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object().shape({
+      email: Yup.string()
+        .email("invalid email format!")
+        .required("required field"),
+      password: Yup.string().required("required field"),
+    }),
+    onSubmit: (values) => {
+      login(values, handleNavigate);
+    },
+  });
   return (
     <div className={"auth"}>
-      <form>
+      <form onSubmit={formik.handleSubmit}>
         <h1>login</h1>
-        <input placeholder={"email"} type="email" />
-        <input placeholder={"password"} type="password" />
-        <button>Login</button>
+        <TextField
+          error={Boolean(formik.errors.email)}
+          helperText={formik.errors.email}
+          variant={"standard"}
+          label={"email"}
+          id={"email"}
+          name={"email"}
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          placeholder={"enter your email"}
+          type="email"
+        />
+        <TextField
+          error={Boolean(formik.errors.password)}
+          helperText={formik.errors.password}
+          variant={"standard"}
+          label={"password"}
+          id={"password"}
+          name={"password"}
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          placeholder={"enter your password"}
+          type="password"
+        />
+        <Button type={"submit"} variant={"contained"} fullWidth>
+          Login
+        </Button>
         <p>
           No have an account? <Link to={"/register"}>register</Link>
         </p>
