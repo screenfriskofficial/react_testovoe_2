@@ -1,5 +1,7 @@
+import { Box } from "@mui/material";
+
 const UploadPage = () => {
-  return <div>upload page</div>;
+  return <Box className={"pages"}>upload page</Box>;
 };
 
 export default UploadPage;

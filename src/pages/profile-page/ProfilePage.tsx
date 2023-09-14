@@ -1,5 +1,7 @@
+import { Box } from "@mui/material";
+
 const ProfilePage = () => {
-  return <div>profile page</div>;
+  return <Box className={"pages"}>profile page</Box>;
 };
 
 export default ProfilePage;

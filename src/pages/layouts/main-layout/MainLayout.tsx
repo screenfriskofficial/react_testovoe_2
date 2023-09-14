@@ -1,13 +1,16 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { Navbar } from "~widgets/navbar/Navbar.tsx";
+import { Navbar } from "~widgets/navbar/ui/Navbar.tsx";
+import { Container } from "@mui/material";
 
 export const MainLayout = () => {
   const location = useLocation();
   return (
-    <div className={"container"}>
+    <>
       {location.pathname === "/login" ||
         (location.pathname === "/register" ? "" : <Navbar />)}
-      <Outlet />
-    </div>
+      <Container maxWidth="xl">
+        <Outlet />
+      </Container>
+    </>
   );
 };
