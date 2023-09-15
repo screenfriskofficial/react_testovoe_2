@@ -9,7 +9,6 @@ import {
   MenuItem,
   Toolbar,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,17 +18,26 @@ import { AuthContext } from "~features/session";
 import cls from "./Navbar.module.scss";
 import CloudIcon from "@mui/icons-material/Cloud";
 import { Search } from "~widgets/search";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const settings = [
   {
     title: "Profile",
     url: "/profile",
+    ico: <AccountCircleIcon />,
   },
   {
     title: "Upload",
     url: "/upload",
+    ico: <FileUploadIcon />,
   },
 ];
+
+// TODO: may be create auth with google and github.
+// TODO: create grid layout in homepage
+
 export const Navbar = () => {
   const { currentUser } = React.useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -62,6 +70,7 @@ export const Navbar = () => {
               <Button
                 sx={{
                   color: "#fff",
+                  display: { sm: "block", xs: "none" },
                 }}
               >
                 <Box className={cls.logo}>
@@ -100,16 +109,34 @@ export const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <Link to={setting.url} className={cls.link}>
+                <Link key={setting.title} to={setting.url} className={cls.link}>
                   <MenuItem key={setting.title} onClick={handleCloseUserMenu}>
-                    <Typography textAlign={"center"}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: "5px",
+                      }}
+                    >
+                      {setting.ico}
                       {setting.title}
-                    </Typography>
+                    </Box>
                   </MenuItem>
                 </Link>
               ))}
               <MenuItem onClick={handleCloseMenuAndLogout}>
-                <Typography textAlign={"center"}>Logout</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "5px",
+                  }}
+                >
+                  <LogoutIcon />
+                  Logout
+                </Box>
               </MenuItem>
             </Menu>
           </Box>

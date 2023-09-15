@@ -11,10 +11,6 @@ $primary-font-color: #343a40;
   font-family: 'Poppins', sans-serif;
 }
 
-body {
-  overflow: hidden;
-}
-
 .spinner_layout {
   display: flex;
   justify-content: center;
@@ -80,8 +76,26 @@ body {
 }
 
 .pages {
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   background-color: #fff;
   padding: 20px;
   box-shadow: 10px 10px 35px 0 rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+
+  .image {
+    transition: .15s ease-in-out;
+    border-radius: 15px;
+
+    &:hover {
+      opacity: .75;
+      cursor: pointer;
+    }
+
+  }
+
+  .image_bar {
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
 }
