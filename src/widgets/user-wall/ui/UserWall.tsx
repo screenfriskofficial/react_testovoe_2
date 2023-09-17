@@ -1,8 +1,7 @@
-import { Box, ImageList, ImageListItem } from "@mui/material";
-
-import { ImageItemBar } from "~widgets/image-item-bar/ImageItemBar.tsx";
-import { ImagesModal } from "~widgets/images-modal";
+import { Box, ImageList, ImageListItem, Typography } from "@mui/material";
+import cls from "./UserWall.module.scss";
 import React from "react";
+import { ImagesModal } from "~widgets/images-modal";
 
 const itemData = [
   {
@@ -41,7 +40,8 @@ const itemData = [
     author: "@Mark",
   },
 ];
-const HomePage = () => {
+
+export const UserWall = () => {
   const [activeImg, setActiveImg] = React.useState<number | null>(null);
   const [open, setOpen] = React.useState<boolean>(false);
   const handleOpen = (index: number) => {
@@ -53,20 +53,24 @@ const HomePage = () => {
     setOpen(false);
   };
   return (
-    <Box className={"home"}>
-      <ImageList variant="masonry" cols={3} gap={10}>
+    <Box className={cls.userWall}>
+      {/* userWall header */}
+      <Typography variant={"h5"} fontWeight={"bold"}>
+        Liked Images
+      </Typography>
+      {/* userWall images*/}
+      <ImageList variant={"masonry"} cols={3} gap={10}>
         {itemData.map((item, index) => (
           <>
             <ImageListItem key={item.img}>
               <img
-                src={`${item.img}?w=248&fit=crop&auto=format`}
-                srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                 alt={item.title}
                 loading="lazy"
-                className={"image"}
+                className={cls.image}
                 onClick={() => handleOpen(index)}
               />
-              <ImageItemBar title={item.title} author={item.author} />
             </ImageListItem>
             <ImagesModal
               img={item.img}
@@ -79,5 +83,3 @@ const HomePage = () => {
     </Box>
   );
 };
-
-export default HomePage;

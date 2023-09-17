@@ -30,7 +30,7 @@ const LoginPage = () => {
     }),
     onSubmit: (values) => {
       setLoader(true);
-      login(values, handleNavigate);
+      login(values, handleNavigate, setLoader);
     },
   });
   return (

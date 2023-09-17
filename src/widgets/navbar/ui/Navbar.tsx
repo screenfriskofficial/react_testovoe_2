@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { signOut } from "firebase/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { auth } from "~app/firebase.ts";
 import React from "react";
 import { AuthContext } from "~features/session";
@@ -43,6 +43,8 @@ export const Navbar = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
+
+  const location = useLocation();
   const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -70,25 +72,40 @@ export const Navbar = () => {
               <Button
                 sx={{
                   color: "#fff",
-                  display: { sm: "block", xs: "none" },
+                  display: {
+                    sm: "block",
+                    xs: `${
+                      location.pathname === "/upload" ||
+                      location.pathname === "/profile"
+                        ? "block"
+                        : "none"
+                    }`,
+                  },
                 }}
               >
                 <Box className={cls.logo}>
                   C L
                   <CloudIcon fontSize={"small"} />U D
-                  <span className={cls.logo_img}>img</span>
+                  <span className={cls.logo_img}>img 18+</span>
                 </Box>
               </Button>
             </Link>
           </Box>
-          <Box>
-            <Search />
-          </Box>
+          {location.pathname === "/upload" ||
+          location.pathname === "/profile" ? (
+            ""
+          ) : (
+            <Box>
+              <Search />
+            </Box>
+          )}
           <Box>
             <Tooltip title={"open settings"}>
               <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                <Avatar>
-                  {currentUser?.displayName?.split("")[0].toUpperCase()}
+                <Avatar
+                  src={currentUser?.photoURL ? currentUser?.photoURL : ""}
+                >
+                  {currentUser?.displayName?.charAt(0).toUpperCase()}
                 </Avatar>
               </IconButton>
             </Tooltip>

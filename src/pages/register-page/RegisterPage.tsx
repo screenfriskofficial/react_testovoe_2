@@ -38,7 +38,7 @@ const RegisterPage = () => {
     }),
     onSubmit: (values) => {
       setLoader(true);
-      register(values, handleNavigate);
+      register(values, handleNavigate, setLoader);
     },
   });
 

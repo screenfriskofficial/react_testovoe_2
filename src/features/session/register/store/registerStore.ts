@@ -11,27 +11,36 @@ interface RegisterCredentials {
 
 interface AuthStoreProps {
   registerError: string;
-  register: (credentials: RegisterCredentials, navigate: () => void) => void;
+  register: (
+    credentials: RegisterCredentials,
+    navigate: () => void,
+    setLoader: (arg0: boolean) => void,
+  ) => void;
 }
 
 export const userRegisterStore = create<AuthStoreProps>((set) => ({
   registerError: "",
-  register: async (credentials, navigate) => {
+  register: async (credentials, navigate, setLoader) => {
     const { displayName, email, password } = credentials;
     await createUserWithEmailAndPassword(auth, email, password)
       .then((res) => {
         updateProfile(res.user, {
           displayName,
+          photoURL: "",
         });
 
         setDoc(doc(db, "users", res.user.uid), {
           uid: res.user.uid,
           displayName,
           email,
-          password,
+          followers: 0,
         });
         navigate();
+        setLoader(false);
       })
-      .catch((e) => set({ registerError: e.message }));
+      .catch((e) => {
+        set({ registerError: e.message });
+        setLoader(false);
+      });
   },
 }));

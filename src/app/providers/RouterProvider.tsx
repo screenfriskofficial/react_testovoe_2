@@ -5,6 +5,7 @@ import { MainLayout } from "~pages//layouts";
 import { AuthGuard } from "~entities/session";
 import { GuestGuard } from "~entities/session";
 import { AuthContext } from "~features/session";
+import { ToastContainer } from "react-toastify";
 
 const HomePage = Loadable(lazy(() => import("~pages/home-page")));
 const ProfilePage = Loadable(lazy(() => import("~pages/profile-page")));
@@ -32,6 +33,7 @@ export function Router() {
           element: (
             <GuestGuard currentUser={currentUser}>
               <ProfilePage />
+              <ToastContainer autoClose={2000} />
             </GuestGuard>
           ),
         },

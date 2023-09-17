@@ -1,0 +1,33 @@
+.userWall {
+  background-color: #fff;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  border: 1px solid #dee2e6;
+  padding: 10px;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 500px;
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
+  }
+
+  .buttonBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .image {
+    transition: .15s ease-in-out;
+
+    &:hover {
+      cursor: pointer;
+      opacity: .85;
+    }
+  }
+}

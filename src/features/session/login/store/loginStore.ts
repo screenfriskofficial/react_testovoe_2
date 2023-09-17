@@ -9,19 +9,25 @@ interface LoginCredentials {
 
 interface AuthStoreProps {
   loginError: string;
-  login: (credentials: LoginCredentials, navigate: () => void) => void;
+  login: (
+    credentials: LoginCredentials,
+    navigate: () => void,
+    setLoader: (arg0: boolean) => void,
+  ) => void;
 }
 
 export const userLoginStore = create<AuthStoreProps>((set) => ({
   loginError: "",
-  login: async (credentials, navigate) => {
+  login: async (credentials, navigate, setLoader) => {
     const { email, password } = credentials;
     await signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         navigate();
+        setLoader(false);
       })
       .catch((e) => {
         set({ loginError: e.message });
+        setLoader(false);
       });
   },
 }));
