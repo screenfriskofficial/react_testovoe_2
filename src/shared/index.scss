@@ -245,6 +245,8 @@ body {
 
   .add_cred {
     display: flex;
+    flex-direction: column;
+    gap: 20px;
     width: 100%;
     @media screen and (max-width: 800px) {
       display: flex;

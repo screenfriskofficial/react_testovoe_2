@@ -1,10 +1,7 @@
-import React, { lazy } from "react";
+import { lazy } from "react";
 import { useRoutes } from "react-router-dom";
 import { Loadable } from "~shared/ui/loadable";
 import { MainLayout } from "~pages//layouts";
-import { AuthGuard } from "~entities/session";
-import { GuestGuard } from "~entities/session";
-import { AuthContext } from "~features/session";
 import { ToastContainer } from "react-toastify";
 
 const HomePage = Loadable(lazy(() => import("~pages/home-page")));
@@ -15,51 +12,39 @@ const RegisterPage = Loadable(lazy(() => import("~pages/register-page")));
 const NotFoundPage = Loadable(lazy(() => import("~pages/not-found-page")));
 
 export function Router() {
-  const { currentUser } = React.useContext(AuthContext);
   return useRoutes([
     {
       element: <MainLayout />,
       children: [
         {
           path: "/",
-          element: (
-            <GuestGuard currentUser={currentUser}>
-              <HomePage />
-            </GuestGuard>
-          ),
+          element: <HomePage />,
         },
         {
-          path: "/profile",
+          path: "/:displayName",
           element: (
-            <GuestGuard currentUser={currentUser}>
+            <>
               <ProfilePage />
               <ToastContainer autoClose={2000} />
-            </GuestGuard>
+            </>
           ),
         },
         {
           path: "/upload",
           element: (
-            <GuestGuard currentUser={currentUser}>
+            <>
               <UploadPage />
-            </GuestGuard>
+              <ToastContainer autoClose={2000} />
+            </>
           ),
         },
         {
           path: "/login",
-          element: (
-            <AuthGuard currentUser={currentUser}>
-              <LoginPage />
-            </AuthGuard>
-          ),
+          element: <LoginPage />,
         },
         {
           path: "/register",
-          element: (
-            <AuthGuard currentUser={currentUser}>
-              <RegisterPage />
-            </AuthGuard>
-          ),
+          element: <RegisterPage />,
         },
         {
           path: "*",

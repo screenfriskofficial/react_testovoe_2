@@ -1,21 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { InputAdornment, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { userLoginStore } from "~features/session";
 import CloudIcon from "@mui/icons-material/Cloud";
 import { EmailRounded, PasswordRounded } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import React from "react";
+import { useAuth, useAuthStore } from "~features/session";
 
 const LoginPage = () => {
-  const { login } = userLoginStore();
-  const [loader, setLoader] = React.useState(false);
-  const navigate = useNavigate();
-
-  const handleNavigate = () => {
-    navigate("/");
-  };
+  const { signIn } = useAuth();
+  const { isLoading, error } = useAuthStore();
 
   const formik = useFormik({
     initialValues: {
@@ -28,10 +22,7 @@ const LoginPage = () => {
         .required("required field"),
       password: Yup.string().required("required field"),
     }),
-    onSubmit: (values) => {
-      setLoader(true);
-      login(values, handleNavigate, setLoader);
-    },
+    onSubmit: (values) => signIn(values),
   });
   return (
     <div className={"auth"}>
@@ -41,14 +32,15 @@ const LoginPage = () => {
       <form onSubmit={formik.handleSubmit}>
         <h1>login</h1>
         <TextField
+          required
           variant={"standard"}
           label={"email"}
           id={"email"}
           name={"email"}
           placeholder={"enter your email"}
           type="email"
-          error={Boolean(formik.errors.email)}
-          helperText={formik.errors.email}
+          error={Boolean(formik.errors.email) || Boolean(error)}
+          helperText={formik.errors.email || error}
           value={formik.values.email}
           onChange={formik.handleChange}
           InputProps={{
@@ -60,6 +52,7 @@ const LoginPage = () => {
           }}
         />
         <TextField
+          required
           variant={"standard"}
           label={"password"}
           id={"password"}
@@ -79,7 +72,7 @@ const LoginPage = () => {
           }}
         />
         <LoadingButton
-          loading={loader}
+          loading={isLoading}
           type={"submit"}
           variant={"contained"}
           fullWidth

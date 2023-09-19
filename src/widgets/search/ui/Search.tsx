@@ -1,6 +1,7 @@
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { InputBase } from "@mui/material";
+import React from "react";
 
 const SearchBox = styled("div")(({ theme }) => ({
   position: "relative",
@@ -43,15 +44,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 export const Search = () => {
+  const [value, setValue] = React.useState("");
+  const [searchResults, setSearchResults] = React.useState([]);
+
+  const handleSearch = async () => {};
+
   return (
-    <SearchBox>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        placeholder="Search Images"
-        inputProps={{ "aria-label": "search" }}
-      />
-    </SearchBox>
+    <>
+      <SearchBox>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search Images"
+          inputProps={{ "aria-label": "search" }}
+        />
+      </SearchBox>
+    </>
   );
 };

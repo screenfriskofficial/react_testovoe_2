@@ -1,6 +1,5 @@
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
-import React from "react";
-import { AuthContext } from "~features/session";
+import { useAuthStore } from "~features/session";
 import { auth } from "~app/firebase.ts";
 import { signOut } from "firebase/auth";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -9,7 +8,7 @@ import { UserWall } from "~widgets/user-wall";
 import { ProfileModal } from "~widgets/profile-modal/ui/ProfileModal.tsx";
 
 const ProfilePage = () => {
-  const { currentUser } = React.useContext(AuthContext);
+  const { user } = useAuthStore();
 
   const navigate = useNavigate();
 
@@ -27,9 +26,9 @@ const ProfilePage = () => {
         <Box className={"avatarBox"}>
           <Avatar
             className={"avatar"}
-            src={currentUser?.photoURL ? currentUser?.photoURL : ""}
+            src={user?.photoURL ? user?.photoURL : ""}
           >
-            {currentUser?.displayName?.charAt(0).toUpperCase()}
+            {user?.displayName?.charAt(0).toUpperCase()}
           </Avatar>
           <Box className={"title_edit"}>
             <Typography
@@ -37,7 +36,7 @@ const ProfilePage = () => {
               variant={"h5"}
               fontWeight={"600"}
             >
-              {currentUser?.displayName}
+              {user?.displayName}
             </Typography>
             <ProfileModal />
           </Box>

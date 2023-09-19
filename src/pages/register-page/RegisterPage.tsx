@@ -1,8 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { InputAdornment, TextField } from "@mui/material";
-import { userRegisterStore } from "~features/session";
 import CloudIcon from "@mui/icons-material/Cloud";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -10,16 +9,11 @@ import {
   EmailRounded,
   PasswordRounded,
 } from "@mui/icons-material";
-import React from "react";
+import { useAuth, useAuthStore } from "~features/session";
 
 const RegisterPage = () => {
-  const { register } = userRegisterStore();
-  const [loader, setLoader] = React.useState(false);
-  const navigate = useNavigate();
-
-  const handleNavigate = () => {
-    navigate("/");
-  };
+  const { signUp } = useAuth();
+  const { isLoading, error } = useAuthStore();
 
   const formik = useFormik({
     initialValues: {
@@ -28,7 +22,10 @@ const RegisterPage = () => {
       password: "",
     },
     validationSchema: Yup.object().shape({
-      displayName: Yup.string().min(3).required("required field"),
+      displayName: Yup.string()
+        .min(3)
+        .max(12, "username must be at most 10 characters")
+        .required("required field"),
       email: Yup.string()
         .email("invalid email format!")
         .required("required field"),
@@ -36,10 +33,7 @@ const RegisterPage = () => {
         .min(6, "your password must have at least 6 characters!")
         .required("required field"),
     }),
-    onSubmit: (values) => {
-      setLoader(true);
-      register(values, handleNavigate, setLoader);
-    },
+    onSubmit: (values) => signUp(values),
   });
 
   return (
@@ -50,6 +44,7 @@ const RegisterPage = () => {
       <form onSubmit={formik.handleSubmit}>
         <h1>register</h1>
         <TextField
+          required
           variant={"standard"}
           label={"username"}
           id={"displayName"}
@@ -69,14 +64,15 @@ const RegisterPage = () => {
           }}
         />
         <TextField
+          required
           variant={"standard"}
           label={"email"}
           id={"email"}
           name={"email"}
           placeholder={"enter your email"}
           type="email"
-          error={Boolean(formik.errors.email)}
-          helperText={formik.errors.email}
+          error={Boolean(formik.errors.email) || Boolean(error)}
+          helperText={formik.errors.email || error}
           value={formik.values.email}
           onChange={formik.handleChange}
           InputProps={{
@@ -88,6 +84,7 @@ const RegisterPage = () => {
           }}
         />
         <TextField
+          required
           variant={"standard"}
           label={"password"}
           id={"password"}
@@ -107,7 +104,7 @@ const RegisterPage = () => {
           }}
         />
         <LoadingButton
-          loading={loader}
+          loading={isLoading}
           type={"submit"}
           variant={"contained"}
           fullWidth

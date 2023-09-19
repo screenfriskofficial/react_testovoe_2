@@ -3,47 +3,32 @@ import { Box, ImageList, ImageListItem } from "@mui/material";
 import { ImageItemBar } from "~widgets/image-item-bar/ImageItemBar.tsx";
 import { ImagesModal } from "~widgets/images-modal";
 import React from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "~app/firebase.ts";
 
-const itemData = [
-  {
-    img: "./women1.jfif",
-    title: "Bed",
-    author: "@Mark",
-  },
-  {
-    img: "./women2.jfif",
-    title: "Books",
-    author: "@Mark",
-  },
-  {
-    img: "./women3.jfif",
-    title: "Sink",
-    author: "@Mark",
-  },
-  {
-    img: "./women4.jfif",
-    title: "Kitchen",
-    author: "@Mark",
-  },
-  {
-    img: "./women5.jfif",
-    title: "Blinds",
-    author: "@Mark",
-  },
-  {
-    img: "./women6.jfif",
-    title: "Chairs",
-    author: "@Mark",
-  },
-  {
-    img: "./giphy.gif",
-    title: "Chairs",
-    author: "@Mark",
-  },
-];
-const HomePage = () => {
+interface ImagesProps {
+  photoURL: string;
+  title: string;
+  author: string;
+  description: string;
+}
+
+const HomePage: React.FC = () => {
   const [activeImg, setActiveImg] = React.useState<number | null>(null);
   const [open, setOpen] = React.useState<boolean>(false);
+  const [images, setImages] = React.useState<ImagesProps[]>([]);
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const docRef = doc(db, "images", "imageWall");
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setImages(docSnap.data().allImages);
+      }
+    };
+    getData();
+  }, []);
+
   const handleOpen = (index: number) => {
     setActiveImg(index);
     setOpen(true);
@@ -55,25 +40,27 @@ const HomePage = () => {
   return (
     <Box className={"home"}>
       <ImageList variant="masonry" cols={3} gap={10}>
-        {itemData.map((item, index) => (
-          <>
-            <ImageListItem key={item.img}>
+        {images.map((image, index) => (
+          <React.Fragment key={image.photoURL}>
+            <ImageListItem>
               <img
-                src={`${item.img}?w=248&fit=crop&auto=format`}
-                srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                alt={item.title}
+                src={`${image.photoURL}?w=248&fit=crop&auto=format`}
+                srcSet={`${image.photoURL}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                alt=""
                 loading="lazy"
-                className={"image"}
+                className="image"
                 onClick={() => handleOpen(index)}
               />
-              <ImageItemBar title={item.title} author={item.author} />
+              <ImageItemBar title={image.title} author={image.author} />
             </ImageListItem>
             <ImagesModal
-              img={item.img}
+              img={image.photoURL}
+              title={image.title}
+              description={image.description}
               open={open && index === activeImg}
               handleClose={handleClose}
             />
-          </>
+          </React.Fragment>
         ))}
       </ImageList>
     </Box>

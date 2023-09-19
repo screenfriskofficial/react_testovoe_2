@@ -24,7 +24,10 @@ export const ProfileModal = () => {
       displayName: auth.currentUser?.displayName,
     },
     validationSchema: Yup.object().shape({
-      displayName: Yup.string().min(3).required("required field"),
+      displayName: Yup.string()
+        .min(6, "name must be at least 6 characters long")
+        .max(12)
+        .required("required field"),
     }),
     onSubmit: async (values) => {
       const { displayName } = values;
@@ -34,7 +37,7 @@ export const ProfileModal = () => {
       const date = new Date().getTime();
       const storageRef = ref(
         storage,
-        `${displayName ? displayName : "" + date}`,
+        `userAvatars/${displayName ? displayName + date : ""}`,
       );
       setLoading(true);
       await uploadBytesResumable(storageRef, file).then(() => {
@@ -45,7 +48,7 @@ export const ProfileModal = () => {
                 displayName,
                 photoURL: downloadURL,
               });
-              toast.success("Name has been changed!");
+              toast.success("Profile has been changed!");
               setOpen(!setOpen);
               setLoading(!loading);
             }

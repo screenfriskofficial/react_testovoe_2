@@ -1,7 +1,7 @@
 import { Router } from "./RouterProvider.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { AuthProviderContext } from "~features/session";
+import { AuthProviderContext } from "~entities/session";
 
 export function Provider() {
   const theme = createTheme({
@@ -13,11 +13,11 @@ export function Provider() {
   });
   return (
     <ThemeProvider theme={theme}>
-      <AuthProviderContext>
-        <BrowserRouter>
+      <BrowserRouter>
+        <AuthProviderContext>
           <Router />
-        </BrowserRouter>
-      </AuthProviderContext>
+        </AuthProviderContext>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

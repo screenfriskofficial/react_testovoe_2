@@ -10,58 +10,44 @@ import {
   Toolbar,
   Tooltip,
 } from "@mui/material";
-import { signOut } from "firebase/auth";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { auth } from "~app/firebase.ts";
 import React from "react";
-import { AuthContext } from "~features/session";
-import cls from "./Navbar.module.scss";
 import CloudIcon from "@mui/icons-material/Cloud";
-import { Search } from "~widgets/search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import LogoutIcon from "@mui/icons-material/Logout";
-
-const settings = [
-  {
-    title: "Profile",
-    url: "/profile",
-    ico: <AccountCircleIcon />,
-  },
-  {
-    title: "Upload",
-    url: "/upload",
-    ico: <FileUploadIcon />,
-  },
-];
-
-// TODO: may be create auth with google and github.
-// TODO: create grid layout in homepage
+import cls from "./Navbar.module.scss";
+import { Link, useLocation } from "react-router-dom";
+import { useAuthStore } from "~features/session";
+import { Search } from "~widgets/search";
+import { useAuth } from "~features/session";
 
 export const Navbar = () => {
-  const { currentUser } = React.useContext(AuthContext);
+  const { user } = useAuthStore();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
+  const { logout } = useAuth();
+
+  const settings = [
+    {
+      title: "Profile",
+      url: `/${user?.displayName}`,
+      ico: <AccountCircleIcon />,
+    },
+    {
+      title: "Upload",
+      url: "/upload",
+      ico: <FileUploadIcon />,
+    },
+  ];
 
   const location = useLocation();
-  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  };
-  const handleCloseMenuAndLogout = () => {
-    setAnchorElUser(null);
-    signOut(auth)
-      .then(() => {
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
   return (
     <AppBar position={"sticky"}>
@@ -76,7 +62,7 @@ export const Navbar = () => {
                     sm: "block",
                     xs: `${
                       location.pathname === "/upload" ||
-                      location.pathname === "/profile"
+                      location.pathname === `/${user?.displayName}`
                         ? "block"
                         : "none"
                     }`,
@@ -92,7 +78,7 @@ export const Navbar = () => {
             </Link>
           </Box>
           {location.pathname === "/upload" ||
-          location.pathname === "/profile" ? (
+          location.pathname === `/${user?.displayName}` ? (
             ""
           ) : (
             <Box>
@@ -102,10 +88,8 @@ export const Navbar = () => {
           <Box>
             <Tooltip title={"open settings"}>
               <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
-                <Avatar
-                  src={currentUser?.photoURL ? currentUser?.photoURL : ""}
-                >
-                  {currentUser?.displayName?.charAt(0).toUpperCase()}
+                <Avatar src={user?.photoURL ? user?.photoURL : ""}>
+                  {user?.displayName?.charAt(0).toUpperCase()}
                 </Avatar>
               </IconButton>
             </Tooltip>
@@ -142,7 +126,7 @@ export const Navbar = () => {
                   </MenuItem>
                 </Link>
               ))}
-              <MenuItem onClick={handleCloseMenuAndLogout}>
+              <MenuItem onClick={logout}>
                 <Box
                   sx={{
                     display: "flex",
