@@ -22,7 +22,6 @@ export const UserWall = () => {
   const [data, setData] = React.useState<Card[]>([]);
 
   const { user } = useAuthStore();
-  console.log(data);
 
   React.useEffect(() => {
     const userUI = user.uid;
