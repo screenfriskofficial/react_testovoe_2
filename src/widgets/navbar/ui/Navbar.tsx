@@ -59,7 +59,7 @@ export const Navbar = () => {
                 <Box className={cls.logo}>
                   C L
                   <CloudIcon fontSize={"small"} />U D
-                  <span className={cls.logo_img}>img 18+</span>
+                  <span className={cls.logo_img}>img</span>
                 </Box>
               </Button>
             </Link>
