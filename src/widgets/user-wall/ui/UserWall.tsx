@@ -52,16 +52,22 @@ export const UserWall = () => {
 
   return (
     <Box className={cls.userWall}>
-      {/* userWall header */}
-      <Typography variant={"h5"} fontWeight={"bold"}>
-        Saved Images
-      </Typography>
-      {/* userWall images*/}
       <ImageList variant={"masonry"} cols={3} gap={10}>
         {!loader ? (
-          data.map((card: Card, index) => (
-            <ImageCard key={card.id} index={index} error={error} card={card} />
-          ))
+          data && data.length > 0 ? (
+            data.map((card: Card, index) => (
+              <ImageCard
+                key={card.id}
+                index={index}
+                error={error}
+                card={card}
+              />
+            ))
+          ) : (
+            <Typography variant="body1" fontWeight={"600"} fontSize={"20px"}>
+              No saved images found.
+            </Typography>
+          )
         ) : (
           <Spinner />
         )}
