@@ -1,8 +1,8 @@
-import { ElementType, JSX, Suspense } from "react";
+import { ElementType, Suspense } from "react";
 import { Spinner } from "~shared/ui/spinner";
 
 export function Loadable(Component: ElementType) {
-  return function fn(props: JSX.Element) {
+  return function fn(props: any) {
     return (
       <Suspense
         fallback={
