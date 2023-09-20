@@ -40,6 +40,8 @@ export const useAuth = () => {
           displayName,
           email,
         });
+
+        setDoc(doc(db, "likes", res.user.uid), {});
         setUser(res.user);
         setLoading(false);
         navigate("/");

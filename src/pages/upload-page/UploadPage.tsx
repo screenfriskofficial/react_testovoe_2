@@ -8,6 +8,7 @@ import { doc, arrayUnion, collection, updateDoc } from "firebase/firestore";
 import { LoadingButton } from "@mui/lab";
 import React from "react";
 import { toast } from "react-toastify";
+import { nanoid } from "nanoid";
 
 const UploadPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,6 +37,7 @@ const UploadPage = () => {
             if (auth.currentUser) {
               await updateDoc(doc(imagesCollection, "imageWall"), {
                 allImages: arrayUnion({
+                  id: nanoid(),
                   photoURL: downloadURL,
                   liked: false,
                   author: auth.currentUser.displayName,

@@ -13,7 +13,7 @@ import { useAuth, useAuthStore } from "~features/session";
 
 const RegisterPage = () => {
   const { signUp } = useAuth();
-  const { isLoading, error } = useAuthStore();
+  const { isLoading } = useAuthStore();
 
   const formik = useFormik({
     initialValues: {
@@ -71,8 +71,8 @@ const RegisterPage = () => {
           name={"email"}
           placeholder={"enter your email"}
           type="email"
-          error={Boolean(formik.errors.email) || Boolean(error)}
-          helperText={formik.errors.email || error}
+          error={Boolean(formik.errors.email)}
+          helperText={formik.errors.email}
           value={formik.values.email}
           onChange={formik.handleChange}
           InputProps={{

@@ -1,12 +1,13 @@
-import { Box, ImageList, ImageListItem } from "@mui/material";
+import { Box, ImageList } from "@mui/material";
 
-import { ImageItemBar } from "~widgets/image-item-bar/ImageItemBar.tsx";
-import { ImagesModal } from "~widgets/images-modal";
 import React from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "~app/firebase.ts";
+import { Spinner } from "~shared/ui/spinner";
+import { ImageCard } from "~widgets/image-card/ui/ImageCard.tsx";
 
-interface ImagesProps {
+interface CardsProps {
+  id: string;
   photoURL: string;
   title: string;
   author: string;
@@ -14,11 +15,13 @@ interface ImagesProps {
 }
 
 const HomePage: React.FC = () => {
-  const [activeImg, setActiveImg] = React.useState<number | null>(null);
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [images, setImages] = React.useState<ImagesProps[]>([]);
+  const [images, setImages] = React.useState<CardsProps[]>([]);
+  const [value, setValue] = React.useState<string>("");
+  const [loader, setLoader] = React.useState(false);
+  const [error, setError] = React.useState("");
 
   React.useEffect(() => {
+    setLoader(true);
     const getData = async () => {
       const docRef = doc(db, "images", "imageWall");
       const docSnap = await getDoc(docRef);
@@ -26,43 +29,44 @@ const HomePage: React.FC = () => {
         setImages(docSnap.data().allImages);
       }
     };
-    getData();
+    getData()
+      .then(() => setLoader(false))
+      .catch((error) => {
+        const result = error as Error;
+        setError(result.message);
+      })
+      .finally(() => setLoader(false));
   }, []);
 
-  const handleOpen = (index: number) => {
-    setActiveImg(index);
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setActiveImg(null);
-    setOpen(false);
-  };
+  const filteredImages = React.useMemo(() => {
+    return images.filter((item) =>
+      item.title.toLowerCase().includes(value.toLowerCase()),
+    );
+  }, [value, images]);
+
   return (
     <Box className={"home"}>
-      <ImageList variant="masonry" cols={3} gap={10}>
-        {images.map((image, index) => (
-          <React.Fragment key={image.photoURL}>
-            <ImageListItem>
-              <img
-                src={`${image.photoURL}?w=248&fit=crop&auto=format`}
-                srcSet={`${image.photoURL}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                alt=""
-                loading="lazy"
-                className="image"
-                onClick={() => handleOpen(index)}
+      {loader ? (
+        <Spinner />
+      ) : (
+        <>
+          <input
+            placeholder={"Search Images"}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+          <ImageList variant="masonry" cols={3} gap={10}>
+            {filteredImages.map((card, index) => (
+              <ImageCard
+                key={card.id}
+                index={index}
+                error={error}
+                card={card}
               />
-              <ImageItemBar title={image.title} author={image.author} />
-            </ImageListItem>
-            <ImagesModal
-              img={image.photoURL}
-              title={image.title}
-              description={image.description}
-              open={open && index === activeImg}
-              handleClose={handleClose}
-            />
-          </React.Fragment>
-        ))}
-      </ImageList>
+            ))}
+          </ImageList>
+        </>
+      )}
     </Box>
   );
 };

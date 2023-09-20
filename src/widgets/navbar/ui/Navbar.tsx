@@ -16,9 +16,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import LogoutIcon from "@mui/icons-material/Logout";
 import cls from "./Navbar.module.scss";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuthStore } from "~features/session";
-import { Search } from "~widgets/search";
 import { useAuth } from "~features/session";
 
 export const Navbar = () => {
@@ -41,8 +40,6 @@ export const Navbar = () => {
     },
   ];
 
-  const location = useLocation();
-
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -58,15 +55,6 @@ export const Navbar = () => {
               <Button
                 sx={{
                   color: "#fff",
-                  display: {
-                    sm: "block",
-                    xs: `${
-                      location.pathname === "/upload" ||
-                      location.pathname === `/${user?.displayName}`
-                        ? "block"
-                        : "none"
-                    }`,
-                  },
                 }}
               >
                 <Box className={cls.logo}>
@@ -77,14 +65,7 @@ export const Navbar = () => {
               </Button>
             </Link>
           </Box>
-          {location.pathname === "/upload" ||
-          location.pathname === `/${user?.displayName}` ? (
-            ""
-          ) : (
-            <Box>
-              <Search />
-            </Box>
-          )}
+
           <Box>
             <Tooltip title={"open settings"}>
               <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>

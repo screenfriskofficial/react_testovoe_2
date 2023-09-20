@@ -83,10 +83,24 @@ body {
 .home {
   padding: 10px;
   overflow-y: auto;
-  background-color: #fff;
   border-radius: 15px;
   border: 1px solid #dee2e6;
+  background: #fff;
   margin-top: 10px;
+
+  input {
+    margin-bottom: 10px;
+    border: none;
+    outline: none;
+    padding: 15px;
+    width: 200px;
+    background-color: #EDEEF0;
+    transition: .25s ease-in-out;
+
+    &:focus {
+      width: 300px;
+    }
+  }
 
   .image {
     transition: .15s ease-in-out;
