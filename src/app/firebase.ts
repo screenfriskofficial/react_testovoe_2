@@ -1,10 +1,10 @@
-import { initializeApp, getApp, getApps } from "firebase/app";
+import { getApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCf_Mlpoij6LJxnjcwC_5NCi0LM0VYLzgg",
+  apiKey: import.meta.env.VITE_API_KEY,
   authDomain: "react-free-images.firebaseapp.com",
   projectId: "react-free-images",
   storageBucket: "react-free-images.appspot.com",

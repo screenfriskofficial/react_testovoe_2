@@ -4,7 +4,8 @@ import React from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "~app/firebase.ts";
 import { Spinner } from "~shared/ui/spinner";
-import { ImageCard } from "~widgets/image-card/ui/ImageCard.tsx";
+import { ImageCard } from "~widgets/image-card/components/ImageCard/ui/ImageCard.tsx";
+import { Search } from "~widgets/search";
 
 interface CardsProps {
   id: string;
@@ -50,11 +51,7 @@ const HomePage: React.FC = () => {
         <Spinner />
       ) : (
         <>
-          <input
-            placeholder={"Search Images"}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+          <Search value={value} setValue={setValue} />
           <ImageList variant="masonry" cols={3} gap={10}>
             {filteredImages.map((card, index) => (
               <ImageCard

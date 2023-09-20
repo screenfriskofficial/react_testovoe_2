@@ -17,8 +17,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import LogoutIcon from "@mui/icons-material/Logout";
 import cls from "./Navbar.module.scss";
 import { Link } from "react-router-dom";
-import { useAuthStore } from "~features/session";
-import { useAuth } from "~features/session";
+import { useAuth, useAuthStore } from "~features/session";
 
 export const Navbar = () => {
   const { user } = useAuthStore();

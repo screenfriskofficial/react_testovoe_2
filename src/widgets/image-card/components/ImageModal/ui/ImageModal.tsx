@@ -1,4 +1,4 @@
-import cls from "./ImagesModal.module.scss";
+import cls from "./ImageModal.module.scss";
 import { Box, Modal } from "@mui/material";
 
 interface ImagesModalProps {
@@ -9,7 +9,7 @@ interface ImagesModalProps {
   handleClose: () => void;
 }
 
-export const ImagesModal = ({
+export const ImageModal = ({
   img,
   open,
   handleClose,

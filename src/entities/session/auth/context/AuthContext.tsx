@@ -1,7 +1,6 @@
 import React, { createContext, ReactNode } from "react";
 import { auth } from "~app/firebase.ts";
-import { onAuthStateChanged } from "firebase/auth";
-import { User } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { useAuthStore } from "~features/session";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "~shared/ui/spinner";

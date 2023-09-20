@@ -3,10 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { auth, db, storage } from "~app/firebase.ts";
-import { useRef } from "react";
-import { doc, arrayUnion, collection, updateDoc } from "firebase/firestore";
+import React, { useRef } from "react";
+import { arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
 import { LoadingButton } from "@mui/lab";
-import React from "react";
 import { toast } from "react-toastify";
 import { nanoid } from "nanoid";
 

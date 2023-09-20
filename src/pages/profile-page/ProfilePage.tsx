@@ -1,6 +1,6 @@
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { useAuthStore } from "~features/session";
-import { auth, db } from "~app/firebase.ts";
+import { auth } from "~app/firebase.ts";
 import { signOut } from "firebase/auth";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";

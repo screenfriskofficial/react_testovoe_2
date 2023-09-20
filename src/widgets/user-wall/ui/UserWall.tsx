@@ -5,7 +5,9 @@ import React from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "~app/firebase.ts";
 import { useAuthStore } from "~features/session";
+import { Spinner } from "~shared/ui/spinner";
 import { ImageCard } from "~widgets/image-card";
+import { useUserWallStore } from "~widgets/user-wall";
 
 interface Card {
   id: string;
@@ -16,29 +18,37 @@ interface Card {
 }
 
 export const UserWall = () => {
-  const [data, setData] = React.useState([]);
-  const [error, setError] = React.useState("");
+  const { error, setError, loader, setLoader } = useUserWallStore();
+  const [data, setData] = React.useState<Card[]>([]);
+
   const { user } = useAuthStore();
+  console.log(data);
 
   React.useEffect(() => {
     const userUI = user.uid;
+    setLoader(true);
     const getProfilePhotos = async () => {
       const likeDocRef = doc(db, "likes", `${userUI}`);
       const likeDocSnap = await getDoc(likeDocRef);
       try {
         if (likeDocSnap.exists()) {
-          console.log("Document data:", likeDocSnap.data());
           setData(likeDocSnap.data().likedPhotos);
         } else {
-          console.log("Document data:", "NONE");
+          setLoader(true);
         }
       } catch (error) {
         const result = error as Error;
         setError(result.message);
       }
     };
-    getProfilePhotos();
-  }, [user.uid]);
+    getProfilePhotos()
+      .then(() => setLoader(false))
+      .catch((error) => {
+        const result = error as Error;
+        setError(result.message);
+      })
+      .finally(() => setLoader(false));
+  }, [user.uid, setError, setLoader, setData]);
 
   return (
     <Box className={cls.userWall}>
@@ -48,9 +58,13 @@ export const UserWall = () => {
       </Typography>
       {/* userWall images*/}
       <ImageList variant={"masonry"} cols={3} gap={10}>
-        {data.map((card: Card, index) => (
-          <ImageCard key={card.id} index={index} error={error} card={card} />
-        ))}
+        {!loader ? (
+          data.map((card: Card, index) => (
+            <ImageCard key={card.id} index={index} error={error} card={card} />
+          ))
+        ) : (
+          <Spinner />
+        )}
       </ImageList>
     </Box>
   );

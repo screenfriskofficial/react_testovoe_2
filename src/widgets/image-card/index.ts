@@ -1,1 +1,2 @@
-export { ImageCard } from "./ui/ImageCard.tsx";
+export * from "./components/ImageModal";
+export * from "./components/ImageCard";

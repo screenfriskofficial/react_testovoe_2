@@ -7,12 +7,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import cls from "./ProfileModal.module.scss";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { LoadingButton } from "@mui/lab";
+import { useProfileModalStore } from "~widgets/profile-modal";
 
 export const ProfileModal = () => {
-  const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const { open, setOpen, loading, setLoading } = useProfileModalStore();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 

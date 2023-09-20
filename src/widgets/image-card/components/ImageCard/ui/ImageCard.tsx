@@ -2,9 +2,9 @@ import React from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { IconButton, ImageListItem, ImageListItemBar } from "@mui/material";
-import { ImagesModal } from "~widgets/images-modal";
+import { ImageModal } from "~widgets/image-card";
 import { db } from "~app/firebase.ts";
-import { doc, arrayRemove, arrayUnion, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useAuthStore } from "~features/session";
 
 interface Card {
@@ -27,7 +27,6 @@ export const ImageCard = ({ card, index, error }: CardProps) => {
   const [open, setOpen] = React.useState(false);
   const { user } = useAuthStore();
   const { photoURL, title, description, author, id } = card;
-  console.log(user.uid);
 
   const handleOpen = (index: number) => {
     setActiveImg(index);
@@ -40,7 +39,6 @@ export const ImageCard = ({ card, index, error }: CardProps) => {
   };
 
   React.useEffect(() => {
-    // При загрузке компонента, проверяем локальное хранилище на наличие информации о лайке.
     const localStorageKey = `like_${user?.uid}_${id}`;
     const savedLike = localStorage.getItem(localStorageKey);
     if (savedLike === "true") {
@@ -60,8 +58,6 @@ export const ImageCard = ({ card, index, error }: CardProps) => {
     const likeDocRef = doc(db, "likes", userUI);
 
     if (liked) {
-      // Удаляем фотографию из массива лайкнутых фотографий.
-
       await updateDoc(likeDocRef, {
         likedPhotos: arrayRemove({
           id,
@@ -72,11 +68,9 @@ export const ImageCard = ({ card, index, error }: CardProps) => {
           liked: true,
         }),
       });
-      console.log("deleted");
       localStorage.setItem(localStorageKey, "false");
       setLiked(false);
     } else {
-      // Добавляем фотографию в массив лайкнутых фотографий.
       await updateDoc(likeDocRef, {
         likedPhotos: arrayUnion({
           id,
@@ -114,7 +108,7 @@ export const ImageCard = ({ card, index, error }: CardProps) => {
           }
         />
       </ImageListItem>
-      <ImagesModal
+      <ImageModal
         img={photoURL}
         title={title}
         description={description}
