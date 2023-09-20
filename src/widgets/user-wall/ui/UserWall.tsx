@@ -54,7 +54,7 @@ export const UserWall = () => {
     <Box className={cls.userWall}>
       {/* userWall header */}
       <Typography variant={"h5"} fontWeight={"bold"}>
-        {data.length > 0 ? "Saved Images" : "Save Your first image!"}
+        Saved Images
       </Typography>
       {/* userWall images*/}
       <ImageList variant={"masonry"} cols={3} gap={10}>

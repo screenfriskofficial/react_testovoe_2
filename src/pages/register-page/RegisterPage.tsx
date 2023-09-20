@@ -23,7 +23,7 @@ const RegisterPage = () => {
     },
     validationSchema: Yup.object().shape({
       displayName: Yup.string()
-        .min(3)
+        .min(3, "username must be at least 3 characters")
         .max(12, "username must be at most 10 characters")
         .required("required field"),
       email: Yup.string()
